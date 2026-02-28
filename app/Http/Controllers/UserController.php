@@ -15,35 +15,41 @@ class UserController extends Controller
 
     public function index()
     {
-
-        $users = $this->userService->getAllUsers();
-
-        return Inertia::render('Users/Index', [
-            'users' => $users
+        return Inertia::render('Users/index', [
+            'users' => $this->userService->getAllUsers(),
+            'roles' => \Spatie\Permission\Models\Role::all(),
         ]);
     }
 
     public function store(StoreUserRequest $request)
     {
-        $this->userService->createUser($request->validated());
+        $userData = $request->validated();
+        $user = $this->userService->createUser($userData);
+        
+        if ($request->has('role')) {
+            $user->syncRoles([$request->role]);
+        }
 
-        return redirect()->route('users.index')
-            ->with('success', 'User Dibuat!');
+        return redirect()->back()->with('success', 'User Berhasil Ditambahkan!');
     }
 
     public function update(UpdateUserRequest $request, int $id)
     {
-        $this->userService->updateUser($id, $request->validated());
+        $userData = $request->validated();
+        $this->userService->updateUser($id, $userData);
+        
+        $user = \App\Models\User::find($id);
+        if ($request->has('role')) {
+            $user->syncRoles([$request->role]);
+        }
 
-        return redirect()->route('users.index')
-            ->with('success', 'Data user DiUpdate!');
+        return redirect()->back()->with('success', 'User Berhasil Diperbarui!');
     }
 
     public function destroy(int $id)
     {
         $this->userService->deleteUser($id);
 
-        return redirect()->route('users.index')
-            ->with('success', 'User Digusur!');
+        return redirect()->back()->with('success', 'User Berhasil Dihapus!');
     }
 }

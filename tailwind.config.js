@@ -12,10 +12,11 @@ export default {
         './resources/js/**/*.vue',
     ],
 
+    darkMode: 'class',
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
         },
     },
