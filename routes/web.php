@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ActivityController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,9 +21,16 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('activities', ActivityController::class);
 
     Route::middleware('supervisor')->group(function () {
         Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
+    });
+
+    // SuperAdmin / RBAC Management
+    Route::middleware('super-admin')->prefix('super-admin')->name('super-admin.')->group(function () {
+        Route::resource('roles', \App\Http\Controllers\SuperAdmin\RoleController::class);
+        Route::resource('permissions', \App\Http\Controllers\SuperAdmin\PermissionController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('users', \App\Http\Controllers\SuperAdmin\UserController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('give-access', \App\Http\Controllers\Superadmin\GiveAccesController::class)->only(['index', 'update']);
     });
 });

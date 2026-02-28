@@ -1,0 +1,454 @@
+<script setup>
+import { ref, computed } from "vue";
+import { useForm, router } from "@inertiajs/vue3";
+import SuperAdminLayout from "@/Layouts/SuperAdminLayout.vue";
+
+const props = defineProps({
+    permissions: Array,
+});
+
+// ─── Search ───────────────────────────────────────────────────────────────────
+const search = ref("");
+const filteredPermissions = computed(() => {
+    if (!search.value) return props.permissions;
+    const q = search.value.toLowerCase();
+    return props.permissions.filter((p) => p.name.toLowerCase().includes(q));
+});
+
+// ─── Modal State ──────────────────────────────────────────────────────────────
+const showModal = ref(false);
+const isEditing = ref(false);
+const editingId = ref(null);
+const showDeleteModal = ref(false);
+const deleteTargetId = ref(null);
+const deleteTargetName = ref("");
+
+// ─── Form ─────────────────────────────────────────────────────────────────────
+const form = useForm({ name: "" });
+
+function openCreate() {
+    isEditing.value = false;
+    editingId.value = null;
+    form.reset();
+    form.clearErrors();
+    showModal.value = true;
+}
+
+function openEdit(permission) {
+    isEditing.value = true;
+    editingId.value = permission.id;
+    form.name = permission.name;
+    form.clearErrors();
+    showModal.value = true;
+}
+
+function closeModal() {
+    showModal.value = false;
+    isEditing.value = false;
+    editingId.value = null;
+    form.reset();
+    form.clearErrors();
+}
+
+function submitForm() {
+    if (isEditing.value) {
+        form.put(route("super-admin.permissions.update", editingId.value), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+        });
+    } else {
+        form.post(route("super-admin.permissions.store"), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+        });
+    }
+}
+
+// ─── Delete ───────────────────────────────────────────────────────────────────
+function confirmDelete(permission) {
+    deleteTargetId.value = permission.id;
+    deleteTargetName.value = permission.name;
+    showDeleteModal.value = true;
+}
+
+function doDelete() {
+    router.delete(
+        route("super-admin.permissions.destroy", deleteTargetId.value),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                showDeleteModal.value = false;
+            },
+        },
+    );
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function permissionInitial(name) {
+    return name ? name.charAt(0).toUpperCase() : "?";
+}
+</script>
+
+<template>
+    <SuperAdminLayout title="Permissions Management">
+        <template #header>
+            <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            >
+                <div>
+                    <h1
+                        class="text-2xl font-bold text-slate-800 dark:text-white"
+                    >
+                        Permissions Management
+                    </h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Kelola hak akses sistem aplikasi.
+                    </p>
+                </div>
+                <button
+                    @click="openCreate"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm transition-colors"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 4v16m8-8H4"
+                        />
+                    </svg>
+                    Tambah Permission
+                </button>
+            </div>
+        </template>
+
+        <!-- Search Bar -->
+        <div class="mb-5 flex items-center gap-3">
+            <div class="relative flex-1 max-w-sm">
+                <svg
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
+                    />
+                </svg>
+                <input
+                    v-model="search"
+                    type="text"
+                    placeholder="Cari permission..."
+                    class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                />
+            </div>
+            <span
+                class="text-sm text-slate-400 dark:text-slate-500 whitespace-nowrap"
+            >
+                {{ filteredPermissions.length }} permission ditemukan
+            </span>
+        </div>
+
+        <!-- Table -->
+        <div
+            class="bg-white dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
+        >
+            <table class="w-full text-sm">
+                <thead>
+                    <tr
+                        class="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
+                    >
+                        <th
+                            class="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-xs"
+                        >
+                            Permission
+                        </th>
+                        <th
+                            class="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-xs"
+                        >
+                            Guard
+                        </th>
+                        <th
+                            class="px-5 py-3.5 text-right font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-xs"
+                        >
+                            Aksi
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="permission in filteredPermissions"
+                        :key="permission.id"
+                        class="border-b border-slate-50 dark:border-slate-700/50 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors"
+                    >
+                        <!-- Name -->
+                        <td class="px-5 py-3.5">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center font-semibold text-xs"
+                                >
+                                    {{ permissionInitial(permission.name) }}
+                                </div>
+                                <span
+                                    class="font-medium text-slate-700 dark:text-slate-200 uppercase tracking-tight text-xs"
+                                >
+                                    {{ permission.name.replace(/-/g, " ") }}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- Guard -->
+                        <td
+                            class="px-5 py-3.5 text-slate-500 dark:text-slate-400 font-mono text-xs uppercase"
+                        >
+                            {{ permission.guard_name }}
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-5 py-3.5">
+                            <div class="flex items-center justify-end gap-2">
+                                <button
+                                    @click="openEdit(permission)"
+                                    title="Edit"
+                                    class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                        />
+                                    </svg>
+                                </button>
+                                <button
+                                    @click="confirmDelete(permission)"
+                                    title="Hapus"
+                                    class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state -->
+                    <tr v-if="filteredPermissions.length === 0">
+                        <td
+                            colspan="3"
+                            class="px-5 py-12 text-center text-slate-400 dark:text-slate-500"
+                        >
+                            Tidak ada permission yang ditemukan.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ─── Create Modal ──────────────────────────────────────────────────── -->
+        <Teleport to="body">
+            <Transition name="modal-fade">
+                <div
+                    v-if="showModal"
+                    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                >
+                    <div
+                        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                        @click="closeModal"
+                    />
+                    <div
+                        class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700"
+                    >
+                        <!-- Header -->
+                        <div
+                            class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
+                        >
+                            <h2
+                                class="text-lg font-semibold text-slate-800 dark:text-white"
+                            >
+                                {{
+                                    isEditing
+                                        ? "Edit Permission"
+                                        : "Tambah Permission"
+                                }}
+                            </h2>
+                            <button
+                                @click="closeModal"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Form -->
+                        <form
+                            class="px-6 py-5 space-y-4"
+                            @submit.prevent="submitForm"
+                        >
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Nama Permission</label
+                                >
+                                <input
+                                    v-model="form.name"
+                                    type="text"
+                                    placeholder="e.g. manage-users"
+                                    required
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                                />
+                                <p
+                                    v-if="form.errors.name"
+                                    class="mt-1 text-xs text-red-500"
+                                >
+                                    {{ form.errors.name }}
+                                </p>
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    @click="closeModal"
+                                    class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    :disabled="form.processing"
+                                    class="px-5 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl shadow-sm transition-colors"
+                                >
+                                    {{
+                                        form.processing
+                                            ? "Menyimpan..."
+                                            : isEditing
+                                              ? "Simpan Perubahan"
+                                              : "Tambah Permission"
+                                    }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+
+        <!-- ─── Delete Confirm Modal ──────────────────────────────────────────── -->
+        <Teleport to="body">
+            <Transition name="modal-fade">
+                <div
+                    v-if="showDeleteModal"
+                    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                >
+                    <div
+                        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                        @click="showDeleteModal = false"
+                    />
+                    <div
+                        class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 text-center"
+                    >
+                        <div
+                            class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-6 h-6 text-red-600 dark:text-red-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h3
+                            class="text-base font-semibold text-slate-800 dark:text-white mb-1"
+                        >
+                            Hapus Permission
+                        </h3>
+                        <p
+                            class="text-sm text-slate-500 dark:text-slate-400 mb-5"
+                        >
+                            Yakin ingin menghapus
+                            <strong
+                                class="text-slate-700 dark:text-slate-200"
+                                >{{ deleteTargetName }}</strong
+                            >? Tindakan ini tidak dapat dibatalkan.
+                        </p>
+                        <div class="flex gap-3 justify-center">
+                            <button
+                                @click="showDeleteModal = false"
+                                class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                @click="doDelete"
+                                class="px-4 py-2 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-sm transition-colors"
+                            >
+                                Ya, Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+    </SuperAdminLayout>
+</template>
+
+<style scoped>
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
+}
+</style>
