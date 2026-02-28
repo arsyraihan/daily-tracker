@@ -27,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\SuperAdmin\Users\UsersRepositoryInterface::class,
             \App\Repositories\SuperAdmin\Users\UsersRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Superadmin\GiveAccesTo\GiveAccesToRepositoryInterface::class,
+            \App\Repositories\Superadmin\GiveAccesTo\GiveAccesToRepository::class
+        );
     }
 
     /**

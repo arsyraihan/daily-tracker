@@ -31,5 +31,6 @@ Route::middleware([
         Route::resource('roles', \App\Http\Controllers\SuperAdmin\RoleController::class);
         Route::resource('permissions', \App\Http\Controllers\SuperAdmin\PermissionController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('users', \App\Http\Controllers\SuperAdmin\UserController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('give-access', \App\Http\Controllers\Superadmin\GiveAccesController::class)->only(['index', 'update']);
     });
 });
