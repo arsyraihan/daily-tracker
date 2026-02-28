@@ -194,9 +194,6 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('activities.index')" :active="route().current('activities.*')">
-                            Daily Tracker
-                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
