@@ -9,6 +9,7 @@ import {
     ChevronRight,
     LogOut,
     Shield,
+    ShieldCheck,
     Key,
     Users,
 } from "lucide-vue-next";
@@ -45,6 +46,13 @@ const menuItems = [
         icon: Key,
         route: "super-admin.permissions.index",
         active: "super-admin.permissions.*",
+        permission: "manage-rbac",
+    },
+    {
+        name: "Access Control",
+        icon: ShieldCheck,
+        route: "super-admin.give-access.index",
+        active: "super-admin.give-access.*",
         permission: "manage-rbac",
     },
     {
