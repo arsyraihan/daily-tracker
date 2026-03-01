@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('supervisor_id')->nullable()->constrained('users')->nullOnDelete()->after('divisi');
+        Schema::create('divisi', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama', 150);
+            $table->text('deskripsi')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['supervisor_id']);
-            $table->dropColumn('supervisor_id');
-        });
+        Schema::dropIfExists('divisi');
     }
 };

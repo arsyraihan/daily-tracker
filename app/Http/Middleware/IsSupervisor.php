@@ -15,8 +15,8 @@ class IsSupervisor
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->role !== 'supervisor') {
-            abort(403, 'Berhenti Jendral, Akses Ditolak');
+        if (auth()->check() && !auth()->user()->hasAnyRole(['supervisor', 'manager', 'superadmin'])) {
+            abort(403, 'Akses Terbatas: Hanya untuk Supervisor/Manager/SuperAdmin');
         }
         return $next($request);
     }

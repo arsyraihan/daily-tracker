@@ -32,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Superadmin\GiveAccesTo\GiveAccesToRepositoryInterface::class,
             \App\Repositories\Superadmin\GiveAccesTo\GiveAccesToRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Superadmin\Divisi\DivisiRepositoryInterface::class,
+            \App\Repositories\Superadmin\Divisi\DivisiRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Superadmin\Jabatan\JabatanRepositoryInterface::class,
+            \App\Repositories\Superadmin\Jabatan\JabatanRepository::class
+        );
     }
 
     /**

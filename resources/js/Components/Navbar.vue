@@ -82,7 +82,7 @@ const logout = () => {
                             </div>
                             <div class="text-left hidden lg:block pr-2">
                                 <p class="text-xs font-black text-slate-900 dark:text-white leading-none uppercase tracking-tight">{{ $page.props.auth.user.name }}</p>
-                                <p class="text-[9px] text-indigo-500 dark:text-indigo-400 mt-1.5 uppercase tracking-[0.2em] font-black italic">Administrator</p>
+                                <p class="text-[9px] text-indigo-500 dark:text-indigo-400 mt-1.5 uppercase tracking-[0.2em] font-black italic">{{ $page.props.auth.user.roles[0] || 'User' }}</p>
                             </div>
                         </button>
                     </template>

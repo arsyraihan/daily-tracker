@@ -13,36 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
-            /*
-            |--------------------------------------------------------------------------
-            | AUTH BASIC (WAJIB UNTUK LARAVEL)
-            |--------------------------------------------------------------------------
-            */
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-
-            /*
-            |--------------------------------------------------------------------------
-            | DATA KARYAWAN
-            |--------------------------------------------------------------------------
-            */
-            $table->string('kode_karyawan')->unique();
-            $table->string('jabatan')->nullable();
-            $table->string('divisi')->nullable();
-            $table->date('tanggal_masuk')->nullable();
-            $table->string('role')->default('user');
-
-            /*
-            |--------------------------------------------------------------------------
-            | STATUS USER
-            |--------------------------------------------------------------------------
-            */
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
-
             $table->timestamps();
         });
 

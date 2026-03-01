@@ -19,8 +19,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage-rbac',
             'view-dashboard',
             'manage-users',
-            'manage-absensi',
-            'manage-tugas',
         ];
 
         foreach ($permissions as $permission) {
@@ -31,21 +29,25 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::firstOrCreate(['name' => 'superadmin', 'guard_name' => 'web']);
         $role->givePermissionTo(Permission::all());
 
-        $role = Role::firstOrCreate(['name' => 'supervisor', 'guard_name' => 'web']);
-        $role->givePermissionTo(['view-dashboard', 'manage-absensi', 'manage-tugas']);
+        $role = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
+        $role->givePermissionTo(['view-dashboard', 'manage-users']);
 
-        $role = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'supervisor', 'guard_name' => 'web']);
+        $role->givePermissionTo(['view-dashboard', 'manage-users']);
+
+        $role = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
         $role->givePermissionTo(['view-dashboard']);
 
-        // Assign superadmin to initial account
+        // Assign roles to initial accounts
         $admin = User::where('email', 'superadmin@gmail.com')->first();
         if ($admin) {
-            $admin->assignRole('superadmin');
+            $admin->syncRoles(['superadmin']);
         }
 
-        $arsy = User::where('email', 'Raihan@gmail.com')->first();
-        if ($arsy) {
-            $arsy->assignRole('user');
+        $user = User::where('email', 'chilmi@gmail.com')->first();
+        if ($user) {
+            $user->update(['name' => 'Chilmi']);
+            $user->syncRoles(['employee']);
         }
     }
 }

@@ -16,24 +16,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Essential Users
+        User::updateOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'RBAC Administrator',
+                'password' => Hash::make('admin123'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'superadmin',
-            'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('pradiza123'),
-            'role' => 'supervisor',
-            'kode_karyawan' => 'SA001',
+        User::updateOrCreate(
+            ['email' => 'chilmi@gmail.com'],
+            [
+                'name' => 'Regular User',
+                'password' => Hash::make('chilmi123'),
+            ]
+        );
+
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            OrganizationSeeder::class,
         ]);
-
-        User::factory()->create([
-            'name' => 'Arsy',
-            'email' => 'Raihan@gmail.com',
-            'password' => Hash::make('arsyraihan'),
-            'role' => 'user',
-            'kode_karyawan' => 'EMP001',
-        ]);
-
-        $this->call(RolesAndPermissionsSeeder::class);
     }
 }
