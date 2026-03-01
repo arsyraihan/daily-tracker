@@ -1,17 +1,16 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { usePage, Link } from "@inertiajs/vue3";
+import { computed } from "vue";
 import {
     LayoutDashboard,
-    ClipboardList,
-    Settings,
     User,
     ChevronLeft,
     ChevronRight,
-    LogOut,
-    Shield,
     ShieldCheck,
     Key,
     Users,
+    Building,
+    Briefcase,
 } from "lucide-vue-next";
 
 defineProps({
@@ -20,65 +19,124 @@ defineProps({
 
 const emit = defineEmits(["toggleCollapse"]);
 
+const { auth } = usePage().props;
+
 const menuItems = [
     {
-        name: "Dashboard",
-        icon: LayoutDashboard,
+        title: "DASHBOARD",
+        type: "header",
+    },
+    {
+        title: "Overview",
         route: "dashboard",
+        icon: LayoutDashboard,
         active: "dashboard",
     },
     {
-        name: "Employees",
+        title: "MANAGER HUB",
+        type: "header",
+        roles: ['superadmin', 'manager', 'supervisor'],
+    },
+    {
+        title: "Team Overview",
+        route: "manager.dashboard",
         icon: Users,
-        route: "users.index",
-        active: "users.*",
-        permission: "manage-users",
+        active: "manager.*",
+        roles: ['superadmin', 'manager', 'supervisor'],
     },
     {
-        name: "Roles",
-        icon: Shield,
-        route: "super-admin.roles.index",
-        active: "super-admin.roles.*",
-        permission: "manage-rbac",
+        title: "EMPLOYEE HUB",
+        type: "header",
     },
     {
-        name: "Permissions",
-        icon: Key,
-        route: "super-admin.permissions.index",
-        active: "super-admin.permissions.*",
-        permission: "manage-rbac",
-    },
-    {
-        name: "Access Control",
-        icon: ShieldCheck,
-        route: "super-admin.give-access.index",
-        active: "super-admin.give-access.*",
-        permission: "manage-rbac",
-    },
-    {
-        name: "Profile",
+        title: "Personal Activity",
+        route: "employee.dashboard",
         icon: User,
+        active: "employee.*",
+    },
+    {
+        title: "EMPLOYEE MANAGEMENT",
+        type: "header",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Employee Master",
+        route: "super-admin.users.index",
+        icon: Users,
+        active: "super-admin.users.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Divisions",
+        route: "super-admin.divisi.index",
+        icon: Building,
+        active: "super-admin.divisi.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Positions",
+        route: "super-admin.jabatan.index",
+        icon: Briefcase,
+        active: "super-admin.jabatan.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Roles & Permissions",
+        route: "super-admin.roles.index",
+        icon: ShieldCheck,
+        active: "super-admin.roles.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Access Control",
+        route: "super-admin.give-access.index",
+        icon: Key,
+        active: "super-admin.give-access.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "SYSTEM & LOGS",
+        type: "header",
+    },
+    {
+        title: "Profile",
         route: "profile.show",
+        icon: User,
         active: "profile.show",
     },
-    {
-        name: "Users",
-        icon: User,
-        route: "super-admin.users.index",
-        active: "super-admin.users.index",
-    },
 ];
+
+const filteredMenuItems = computed(() => {
+    const user = auth.user;
+    if (!user) return [];
+    return menuItems.filter(item => {
+        // Handle roles
+        if (item.roles) {
+            const hasRole = item.roles.some(role => user.roles.includes(role));
+            if (!hasRole) return false;
+        }
+        
+        // Handle permissions
+        if (item.permissions) {
+            const hasPerm = item.permissions.some(perm => user.permissions.includes(perm));
+            if (!hasPerm) return false;
+        }
+
+        return true;
+    });
+});
 </script>
 
 <template>
     <aside
         :class="[
-            'fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-50',
+            'fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-50 flex flex-col',
             isCollapsed ? 'w-20' : 'w-64',
         ]"
     >
+        <!-- Header: Fixed -->
         <div
-            class="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800"
+            class="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex-shrink-0"
         >
             <Link
                 :href="route('dashboard')"
@@ -97,20 +155,19 @@ const menuItems = [
             </Link>
         </div>
 
-        <nav class="mt-6 px-3 space-y-1">
-            <template v-for="item in menuItems" :key="item.name">
+        <!-- Navigation: Scrollable -->
+        <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1 custom-scrollbar">
+            <template v-for="item in filteredMenuItems" :key="item.title">
+                <div v-if="item.type === 'header'" class="mt-6 mb-2 px-4">
+                    <span v-if="!isCollapsed" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ item.title }}</span>
+                    <div v-else class="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
+                </div>
                 <Link
-                    v-if="
-                        !item.permission ||
-                        $page.props.auth.user.permissions.includes(
-                            item.permission,
-                        ) ||
-                        $page.props.auth.user.roles.includes('superadmin')
-                    "
-                    :href="route(item.route)"
+                    v-else
+                    :href="route().has(item.route) ? route(item.route) : '#'"
                     :class="[
                         'flex items-center px-3 py-3 rounded-xl transition-all duration-200 group',
-                        route().current(item.active)
+                        route().has(item.route) && route().current(item.active)
                             ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
                             : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
                     ]"
@@ -118,30 +175,31 @@ const menuItems = [
                     <component
                         :is="item.icon"
                         :class="[
-                            'w-6 h-6 transition-colors duration-200',
-                            route().current(item.active)
+                            'w-6 h-6 transition-colors duration-200 flex-shrink-0',
+                            route().has(item.route) && route().current(item.active)
                                 ? 'text-indigo-600 dark:text-indigo-400'
                                 : 'text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400',
                         ]"
                     />
                     <span
                         v-if="!isCollapsed"
-                        class="ml-3 font-medium transition-opacity duration-300"
+                        class="ml-3 font-medium transition-opacity duration-300 whitespace-nowrap"
                     >
-                        {{ item.name }}
+                        {{ item.title }}
                     </span>
                     <div
-                        v-if="route().current(item.active) && !isCollapsed"
+                        v-if="route().has(item.route) && route().current(item.active) && !isCollapsed"
                         class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400"
                     ></div>
                 </Link>
             </template>
         </nav>
 
-        <div class="absolute bottom-6 w-full px-3">
+        <!-- Footer: Fixed -->
+        <div class="p-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 bg-white dark:bg-slate-900">
             <button
                 @click="$emit('toggleCollapse')"
-                class="flex items-center justify-center w-full py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                class="flex items-center justify-center w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl text-slate-600 dark:text-slate-400 transition-colors shadow-sm"
             >
                 <component
                     :is="isCollapsed ? ChevronRight : ChevronLeft"
@@ -151,3 +209,30 @@ const menuItems = [
         </div>
     </aside>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+</style>

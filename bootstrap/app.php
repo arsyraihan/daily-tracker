@@ -21,8 +21,23 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'supervisor' => \App\Http\Middleware\IsSupervisor::class,
             'super-admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->respond(function ($response, $e, $request) {
+            if (! app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+                return \Inertia\Inertia::render('Error', ['status' => $response->getStatusCode()])
+                    ->toResponse($request)
+                    ->setStatusCode($response->getStatusCode());
+            } elseif ($response->getStatusCode() === 403) {
+                 return \Inertia\Inertia::render('Error', ['status' => 403])
+                    ->toResponse($request)
+                    ->setStatusCode(403);
+            }
+    
+            return $response;
+        });
     })->create();

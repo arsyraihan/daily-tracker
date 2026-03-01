@@ -2,25 +2,25 @@
 import { Link } from '@inertiajs/vue3';
 import { 
     LayoutDashboard, 
+    Calendar, 
     ClipboardList, 
+    ListTodo, 
     User,
     ChevronLeft,
     ChevronRight,
-    LogOut,
-    CheckSquare,
-    Clock,
-    Calendar,
-    ListTodo
+    Users,
+    Clock
 } from 'lucide-vue-next';
 
 defineProps({
     isCollapsed: Boolean,
 });
 
-const emit = defineEmits(['toggleCollapse']);
+defineEmits(['toggleCollapse']);
 
 const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, route: 'dashboard', active: 'dashboard' },
+    { name: 'Team Overview', icon: Users, route: 'manager.dashboard', active: 'manager.dashboard' },
     { name: 'My Activity', icon: Clock, route: 'employee.dashboard', active: 'employee.dashboard' },
     { name: 'Profile', icon: User, route: 'profile.show', active: 'profile.show' },
 ];
@@ -33,17 +33,15 @@ const menuItems = [
             isCollapsed ? 'w-20' : 'w-64'
         ]"
     >
-        <!-- Header: Fixed -->
         <div class="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
             <Link :href="route('dashboard')" class="flex items-center space-x-3 overflow-hidden">
                 <div class="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-xl">D</span>
+                    <span class="text-white font-bold text-xl">S</span>
                 </div>
-                <span v-if="!isCollapsed" class="font-bold text-xl text-slate-800 dark:text-white whitespace-nowrap">DailyTracker</span>
+                <span v-if="!isCollapsed" class="font-bold text-lg text-slate-800 dark:text-white whitespace-nowrap">Supervisor Panel</span>
             </Link>
         </div>
 
-        <!-- Navigation: Scrollable -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1 custom-scrollbar">
             <template v-for="item in menuItems" :key="item.name">
                 <Link 
@@ -76,7 +74,6 @@ const menuItems = [
             </template>
         </nav>
 
-        <!-- Footer: Fixed -->
         <div class="p-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 bg-white dark:bg-slate-900">
             <button 
                 @click="$emit('toggleCollapse')"
@@ -92,25 +89,14 @@ const menuItems = [
 .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #e2e8f0;
     border-radius: 10px;
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #334155;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #cbd5e1;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #475569;
 }
 </style>

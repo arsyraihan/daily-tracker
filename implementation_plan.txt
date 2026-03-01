@@ -1,0 +1,68 @@
+=============================================================================
+DAILY TRACKER SYSTEM - PROJECT IMPLEMENTATION ROADMAP
+=============================================================================
+Phase: Core System (RBAC Already Implemented)
+
+-----------------------------------------------------------------------------
+1. DATABASE EXECUTION ORDER (MIGRATION PLAN)
+-----------------------------------------------------------------------------
+
+STEP 1: TABLE 'divisi'
+- Description: Master data divisi/perusahaan unit kerja.
+- Dependency: None.
+- Reason: Menjadi foreign key untuk users, sesi_absensi, dan sesi_tugas.
+
+STEP 2: TABLE 'jabatan'
+- Description: Master data jabatan dan level hierarki.
+- Dependency: None.
+- Reason: Digunakan oleh tabel users untuk struktur organisasi.
+
+STEP 3: TABLE 'users' (EXTEND EXISTING)
+- Description: Tambahkan kolom kode_karyawan, divisi_id, jabatan_id, atasan_id.
+- Dependency: ['divisi', 'jabatan'].
+- Reason: Menjadi pusat relasi seluruh sistem (absensi & tugas).
+
+STEP 4: TABLE 'sesi_absensi'
+- Description: Supervisor membuat sesi absensi per tanggal per divisi.
+- Dependency: ['divisi', 'users'].
+- Reason: Menjadi parent dari tabel absensi.
+
+STEP 5: TABLE 'absensi'
+- Description: Karyawan melakukan absensi berdasarkan sesi.
+- Dependency: ['sesi_absensi', 'users'].
+- Reason: Menyimpan data checkin, checkout, dan approval supervisor.
+
+STEP 6: TABLE 'sesi_tugas'
+- Description: Supervisor membuat sesi tugas harian per divisi.
+- Dependency: ['divisi', 'users'].
+- Reason: Menjadi parent dari tabel tugas.
+
+STEP 7: TABLE 'tugas'
+- Description: Supervisor assign tugas ke karyawan.
+- Dependency: ['sesi_tugas', 'users'].
+- Reason: Menyimpan assignment, status, dan approval.
+
+STEP 8: TABLE 'log_tugas'
+- Description: Karyawan update progress tugas.
+- Dependency: ['tugas', 'users'].
+- Reason: Menyimpan histori progress pekerjaan.
+
+-----------------------------------------------------------------------------
+2. SYSTEM FLOW SUMMARY
+-----------------------------------------------------------------------------
+
+A. ALUR ABSENSI:
+   1. Supervisor membuat sesi_absensi.
+   2. Karyawan submit absensi.
+   3. Supervisor approve/reject absensi.
+
+B. ALUR TUGAS (TASK):
+   1. Supervisor membuat sesi_tugas.
+   2. Supervisor assign tugas.
+   3. Karyawan update progress via log_tugas.
+   4. Supervisor approve tugas.
+
+-----------------------------------------------------------------------------
+Status: READY FOR MIGRATION DEVELOPMENT
+Generated: 2026-03-01
+=============================================================================

@@ -17,7 +17,7 @@ defineProps({
 
 const { auth } = usePage().props;
 const layoutComponent = computed(() => {
-    return auth.user.roles.includes('superadmin') ? SuperAdminLayout : UserLayout;
+    return auth.user.roles.some(r => ['superadmin', 'supervisor', 'manager'].includes(r)) ? SuperAdminLayout : UserLayout;
 });
 </script>
 

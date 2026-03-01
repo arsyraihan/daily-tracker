@@ -9,9 +9,7 @@
         "strict": false,
         "allowJs": true,
         "noEmit": true,
-        "globals": {
-            "route": "readonly"
-        }
+        
     },
     "exclude": ["node_modules", "public", "vendor"]
 }
