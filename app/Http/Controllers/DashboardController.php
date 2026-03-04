@@ -17,9 +17,14 @@ class DashboardController extends Controller
         }
 
         if ($user->hasAnyRole(['manager', 'supervisor'])) {
-            return redirect('/manager/dashboard');
+            if ($user->hasPermissionTo('view-dashboard')) {
+                return redirect()->route('manager.dashboard');
+            }
+            if ($user->hasPermissionTo('kontrol absensi')) {
+                return redirect()->route('manager.absensi.index');
+            }
         }
 
-        return redirect('/employee/dashboard');
+        return redirect()->route('employee.dashboard');
     }
 }

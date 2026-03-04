@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import SupervisorLayout from "@/Layouts/SupervisorLayout.vue";
+import ManagerLayout from "@/Layouts/ManagerLayout.vue";
 import { 
     Users, Calendar, Clock, ClipboardList, 
     TrendingUp, UserCheck, Briefcase, Building, HelpCircle 
@@ -26,7 +26,7 @@ function getIcon(iconName) {
 </script>
 
 <template>
-    <SupervisorLayout title="Manager Control Center">
+    <ManagerLayout title="Manager Control Center">
         <template #header>
             <div class="space-y-1 py-6">
                 <h2 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
@@ -36,9 +36,8 @@ function getIcon(iconName) {
             </div>
         </template>
 
-        <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div v-for="stat in stats" :key="stat.label" class="bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+            <div v-for="stat in stats" :key="stat.label" class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
                 <div class="flex items-center gap-4">
                     <div :class="['w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-emerald-500/10', stat.bg]">
                         <component :is="getIcon(stat.icon)" :class="['w-6 h-6', stat.color]" />
@@ -53,7 +52,7 @@ function getIcon(iconName) {
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Team List -->
-            <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <div>
                         <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Your Direct Reports</h3>
@@ -112,7 +111,7 @@ function getIcon(iconName) {
             <!-- Side Cards -->
             <div class="lg:col-span-4 space-y-6">
                 <!-- Profile Area -->
-                <div class="bg-slate-900 rounded-[3rem] p-8 text-center relative overflow-hidden">
+                <div class="bg-slate-900 rounded-2xl p-8 text-center relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
                     <div class="relative z-10 flex flex-col items-center">
                         <div class="w-20 h-20 rounded-[1.5rem] bg-emerald-600 flex items-center justify-center text-white mb-4 rotate-3 shadow-xl">
@@ -131,7 +130,7 @@ function getIcon(iconName) {
                 </div>
 
                 <!-- Upcoming Task/Info Area -->
-                <div class="bg-emerald-50 dark:bg-emerald-900/10 rounded-[3rem] p-8 border border-emerald-100 dark:border-emerald-900/30">
+                <div class="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl p-8 border border-emerald-100 dark:border-emerald-900/30">
                     <h3 class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.3em] mb-4">Upcoming Responsibilities</h3>
                     <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed italic uppercase tracking-wider">
                         Step 4 (Management Absensi) will populate here once active. You will be able to manage daily check-ins for your team.
@@ -139,5 +138,5 @@ function getIcon(iconName) {
                 </div>
             </div>
         </div>
-    </SupervisorLayout>
+    </ManagerLayout>
 </template>

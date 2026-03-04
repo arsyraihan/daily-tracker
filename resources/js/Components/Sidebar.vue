@@ -11,6 +11,7 @@ import {
     Users,
     Building,
     Briefcase,
+    Lock,
 } from "lucide-vue-next";
 
 defineProps({
@@ -81,10 +82,17 @@ const menuItems = [
         roles: ['superadmin'],
     },
     {
-        title: "Roles & Permissions",
+        title: "Role Hub",
         route: "super-admin.roles.index",
         icon: ShieldCheck,
         active: "super-admin.roles.*",
+        roles: ['superadmin'],
+    },
+    {
+        title: "Permission Master",
+        route: "super-admin.permissions.index",
+        icon: Lock,
+        active: "super-admin.permissions.*",
         roles: ['superadmin'],
     },
     {

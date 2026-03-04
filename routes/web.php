@@ -35,6 +35,8 @@ Route::middleware([
     // Manager / Supervisor Workspace
     Route::middleware('supervisor')->prefix('manager')->name('manager.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Manager\DashboardController::class, 'index'])->name('dashboard');
+
+        // Attendance Management (Permission handled in IsSupervisor middleware via can())
         Route::post('absensi/record/bulk', [\App\Http\Controllers\Manager\SesiAbsensiController::class, 'bulkStoreRecord'])->name('absensi.record.bulk');
         Route::resource('absensi', \App\Http\Controllers\Manager\SesiAbsensiController::class);
         Route::post('absensi/approve/{id}', [\App\Http\Controllers\Manager\SesiAbsensiController::class, 'approve'])->name('absensi.approve');

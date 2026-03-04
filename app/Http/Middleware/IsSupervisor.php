@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class IsSupervisor
@@ -15,9 +16,38 @@ class IsSupervisor
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && !auth()->user()->hasAnyRole(['supervisor', 'manager', 'superadmin'])) {
-            abort(403, 'Akses Terbatas: Hanya untuk Supervisor/Manager/SuperAdmin');
+        if (!auth()->check()) {
+            return redirect()->route('login');
         }
+
+        $user = auth()->user();
+
+        // SuperAdmin has full bypass
+        if ($user->hasRole('superadmin')) {
+            return $next($request);
+        }
+
+        // Basic Role Check: Must be management staff
+        if (!$user->hasAnyRole(['supervisor', 'manager'])) {
+            abort(403, 'Unauthorized: Management Access Only.');
+        }
+
+        // 1. GATE UTAMA: Izin Akses Manager Portal
+        // Jika tidak punya 'view-dashboard', user dianggap tidak berhak masuk ke area management sama sekali.
+        if (!$user->can('view-dashboard')) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'Izin akses Portal Management Anda telah dicabut.');
+        }
+
+        // 2. PROTEKSI FITUR SPESIFIK: Misalnya Absensi
+        if ($request->routeIs('manager.absensi.*')) {
+            if (!$user->can('kontrol absensi')) {
+                abort(403, 'Anda tidak memiliki hak akses (kontrol absensi) untuk fitur ini.');
+            }
+        }
+
         return $next($request);
     }
 }
