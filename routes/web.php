@@ -57,6 +57,10 @@ Route::middleware([
         Route::post('tugas/item/{id}/propose-sub', [\App\Http\Controllers\Manager\TugasController::class, 'proposeSubTugas'])->name('tugas.propose-sub');
         Route::post('tugas/item/{id}/approve-plan', [\App\Http\Controllers\Manager\TugasController::class, 'approveSubTugasPlan'])->name('tugas.approve-plan');
         Route::post('tugas/sub/{id}/complete', [\App\Http\Controllers\Manager\TugasController::class, 'completeSubTugas'])->name('tugas.sub.complete');
+
+        // Report & Export
+        Route::get('reports', [\App\Http\Controllers\Manager\ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/export', [\App\Http\Controllers\Manager\ReportController::class, 'export'])->name('reports.export');
     });
 
     // Employee / Regular User Workspace
@@ -69,6 +73,10 @@ Route::middleware([
         // Task routes for employees
         Route::get('/tugas', [\App\Http\Controllers\Employee\TugasController::class, 'index'])->name('tugas.index');
         Route::post('/tugas/submit-progress/{id}', [\App\Http\Controllers\Employee\TugasController::class, 'submitProgress'])->name('tugas.submit-progress');
+
+        // Report routes for employees
+        Route::get('/reports', [\App\Http\Controllers\Employee\ReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export', [\App\Http\Controllers\Employee\ReportController::class, 'export'])->name('reports.export');
     });
 
     // Leader Workspace (Limited to coordination and breakdown)
