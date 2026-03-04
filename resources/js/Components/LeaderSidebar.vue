@@ -1,15 +1,16 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { 
     LayoutDashboard, 
-    ClipboardList, 
+    CheckSquare, 
     User,
     ChevronLeft,
     ChevronRight,
-    LogOut,
-    CheckSquare,
+    Users,
     Clock,
-    Calendar,
+    Zap,
+    Briefcase,
     ListTodo
 } from 'lucide-vue-next';
 
@@ -19,8 +20,11 @@ defineProps({
 
 const emit = defineEmits(['toggleCollapse']);
 
+const { auth } = usePage().props;
+
 const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, route: 'employee.dashboard', active: 'employee.dashboard' },
+    { name: 'Koordinasi Tim', icon: Users, route: 'leader.tugas.index', active: 'leader.tugas.*' },
     { name: 'Tugas Saya', icon: CheckSquare, route: 'employee.tugas.index', active: 'employee.tugas.*' },
     { name: 'Absensi Saya', icon: Clock, route: 'employee.absensi.index', active: 'employee.absensi.index' },
     { name: 'Profile', icon: User, route: 'profile.show', active: 'profile.show' },
@@ -34,23 +38,27 @@ const menuItems = [
             isCollapsed ? 'w-20' : 'w-64'
         ]"
     >
-        <!-- Header: Fixed -->
+        <!-- Header -->
         <div class="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
             <Link :href="route('dashboard')" class="flex items-center space-x-3 overflow-hidden">
-                <div class="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-xl">D</span>
+                <div class="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <span class="text-white font-bold text-xl uppercase italic">L</span>
                 </div>
-                <span v-if="!isCollapsed" class="font-bold text-xl text-slate-800 dark:text-white whitespace-nowrap">DailyTracker</span>
+                <span v-if="!isCollapsed" class="font-black text-lg text-slate-800 dark:text-white whitespace-nowrap tracking-tight uppercase">Leader <span class="text-indigo-600">Workspace</span></span>
             </Link>
         </div>
 
-        <!-- Navigation: Scrollable -->
+        <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1 custom-scrollbar">
+             <div v-if="!isCollapsed" class="px-3 mb-2">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Management Space</p>
+            </div>
+
             <template v-for="item in menuItems" :key="item.name">
                 <Link 
-                    :href="route(item.route)"
+                    :href="route().has(item.route) ? route(item.route) : '#'"
                     :class="[
-                        'flex items-center px-3 py-3 rounded-xl transition-all duration-200 group',
+                        'flex items-center px-3 py-3 rounded-xl transition-all duration-200 group relative',
                         route().current(item.active) 
                             ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
                             : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -65,19 +73,19 @@ const menuItems = [
                     />
                     <span 
                         v-if="!isCollapsed" 
-                        class="ml-3 font-medium transition-opacity duration-300 whitespace-nowrap"
+                        class="ml-3 font-bold transition-opacity duration-300 whitespace-nowrap uppercase text-[11px] tracking-widest"
                     >
                         {{ item.name }}
                     </span>
                     <div 
                         v-if="route().current(item.active) && !isCollapsed" 
-                        class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400"
+                        class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-sm"
                     ></div>
                 </Link>
             </template>
         </nav>
 
-        <!-- Footer: Fixed -->
+        <!-- Footer -->
         <div class="p-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 bg-white dark:bg-slate-900">
             <button 
                 @click="$emit('toggleCollapse')"
@@ -93,25 +101,14 @@ const menuItems = [
 .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #e2e8f0;
     border-radius: 10px;
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #334155;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #cbd5e1;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #475569;
 }
 </style>

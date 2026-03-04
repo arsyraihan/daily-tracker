@@ -35,7 +35,14 @@ const menuItems = [
         icon: Calendar, 
         route: 'manager.absensi.index', 
         active: 'manager.absensi.*',
-        permission: 'kontrol absensi' // Example permission
+        permission: 'kontrol absensi'
+    },
+    { 
+        name: 'Management Tugas', 
+        icon: ListTodo, 
+        route: 'manager.tugas.index', 
+        active: 'manager.tugas.*',
+        permission: 'kelola tugas'
     },
     { 
         name: 'Absensi Saya', 

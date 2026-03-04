@@ -8,7 +8,9 @@ import {
     Search, 
     LogOut,
     User,
-    Settings
+    Settings,
+    Layers,
+    CheckCircle2
 } from 'lucide-vue-next';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -67,10 +69,85 @@ const logout = () => {
             </button>
 
             <!-- Notifications -->
-            <button class="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl relative transition-all hover:scale-110 active:scale-90">
-                <Bell class="w-5 h-5" />
-                <span class="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>
-            </button>
+            <div class="relative">
+                <Dropdown align="right" width="80">
+                    <template #trigger>
+                        <button class="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl relative transition-all hover:scale-110 active:scale-90 group">
+                            <Bell class="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                            <span v-if="$page.props.notifications?.total_pending > 0" class="absolute top-2.5 right-2.5 w-4 h-4 bg-rose-500 text-white text-[8px] flex items-center justify-center font-black rounded-full border-2 border-white dark:border-slate-900 animate-bounce">
+                                {{ $page.props.notifications.total_pending }}
+                            </span>
+                        </button>
+                    </template>
+
+                    <template #content>
+                        <div class="w-80 overflow-hidden">
+                            <div class="px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                <h3 class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Management Feed</h3>
+                                <div class="flex gap-2">
+                                    <span v-if="$page.props.notifications?.pending_plans?.length > 0" class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[7px] font-black rounded-full uppercase">PLAN</span>
+                                    <span v-if="$page.props.notifications?.unapproved_tasks?.length > 0" class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-[7px] font-black rounded-full uppercase">DONE</span>
+                                </div>
+                            </div>
+
+                            <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+                                <!-- PENDING PLANS SECTION -->
+                                <template v-if="$page.props.notifications?.pending_plans?.length > 0">
+                                    <div class="px-4 py-2 bg-slate-100/30 dark:bg-slate-800/20 text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 dark:border-slate-800/50">Breakdown Plans (Review)</div>
+                                    <Link 
+                                        v-for="task in $page.props.notifications.pending_plans" 
+                                        :key="'plan-'+task.id"
+                                        :href="route('manager.tugas.show', task.sesi_tugas_id)"
+                                        class="flex items-start gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all border-b border-slate-50 dark:border-slate-800/50 group"
+                                    >
+                                        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                            <Layers class="w-4 h-4 text-amber-600" />
+                                        </div>
+                                        <div class="flex-1 min-w-0 font-bold">
+                                            <p class="text-[10px] text-slate-900 dark:text-white uppercase leading-tight line-clamp-1 mb-0.5">{{ task.judul }}</p>
+                                            <p class="text-[8px] text-slate-400 uppercase tracking-tight leading-none italic">
+                                                Plan by <span class="text-amber-500 font-black not-italic">Team Leader</span>
+                                            </p>
+                                        </div>
+                                    </Link>
+                                </template>
+
+                                <!-- UNAPPROVED TASKS SECTION -->
+                                <template v-if="$page.props.notifications?.unapproved_tasks?.length > 0">
+                                    <div class="px-4 py-2 bg-slate-100/30 dark:bg-slate-800/20 text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 dark:border-slate-800/50">Verification Needed</div>
+                                    <Link 
+                                        v-for="task in $page.props.notifications.unapproved_tasks" 
+                                        :key="'done-'+task.id"
+                                        :href="route('manager.tugas.show', task.sesi_tugas_id)"
+                                        class="flex items-start gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all border-b border-slate-50 dark:border-slate-800/50 group"
+                                    >
+                                        <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                            <CheckCircle2 class="w-4 h-4 text-indigo-600" />
+                                        </div>
+                                        <div class="flex-1 min-w-0 font-bold">
+                                            <p class="text-[10px] text-slate-900 dark:text-white uppercase leading-tight line-clamp-1 mb-0.5">{{ task.judul }}</p>
+                                            <p class="text-[8px] text-slate-400 uppercase tracking-tight leading-none italic">
+                                                By <span class="text-indigo-500 font-black not-italic">{{ task.user?.name || 'Employee' }}</span>
+                                            </p>
+                                        </div>
+                                    </Link>
+                                </template>
+
+                                <div v-if="$page.props.notifications?.total_pending === 0" class="p-10 text-center">
+                                    <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <Bell class="w-5 h-5 text-slate-300" />
+                                    </div>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-tight">All clear.<br>Tasks are running smoothly.</p>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800">
+                                <Link :href="route('manager.tugas.index')" class="block w-full text-center py-2 text-[8px] font-black text-slate-400 hover:text-indigo-600 uppercase tracking-[0.2em] transition-colors bg-white dark:bg-slate-800 rounded-lg shadow-sm">Main Dashboard</Link>
+                            </div>
+                        </div>
+                    </template>
+                </Dropdown>
+            </div>
 
             <!-- User Dropdown -->
             <div class="relative">
@@ -82,7 +159,7 @@ const logout = () => {
                             </div>
                             <div class="text-left hidden lg:block pr-2">
                                 <p class="text-xs font-black text-slate-900 dark:text-white leading-none uppercase tracking-tight">{{ $page.props.auth.user.name }}</p>
-                                <p class="text-[9px] text-indigo-500 dark:text-indigo-400 mt-1.5 uppercase tracking-[0.2em] font-black italic">{{ $page.props.auth.user.roles[0] || 'User' }}</p>
+                                <p class="text-[9px] text-indigo-500 dark:text-indigo-400 mt-1.5 uppercase tracking-[0.2em] font-black italic">{{ $page.props.auth.user.roles[0]?.name || $page.props.auth.user.roles[0] || 'User' }}</p>
                             </div>
                         </button>
                     </template>
