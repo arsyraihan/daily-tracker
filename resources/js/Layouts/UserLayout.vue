@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import UserSidebar from '@/Components/UserSidebar.vue';
 import ManagerSidebar from '@/Components/ManagerSidebar.vue';
+import LeaderSidebar from '@/Components/LeaderSidebar.vue';
 import Navbar from '@/Components/Navbar.vue';
 import PremiumToast from '@/Components/PremiumToast.vue';
 
@@ -15,10 +16,24 @@ const user = page.props.auth.user;
 const isCollapsed = ref(false);
 
 const isManager = computed(() => {
-    return user?.roles?.some(role => role === 'manager' || role === 'supervisor');
+    return user?.roles?.some(role => {
+        const roleName = typeof role === 'string' ? role : role.name;
+        return ['manager', 'supervisor', 'superadmin'].includes(roleName);
+    });
 });
 
-const SidebarComponent = computed(() => isManager.value ? ManagerSidebar : UserSidebar);
+const isLeader = computed(() => {
+    return user?.roles?.some(role => {
+        const roleName = typeof role === 'string' ? role : role.name;
+        return roleName === 'leader';
+    });
+});
+
+const SidebarComponent = computed(() => {
+    if (isManager.value) return ManagerSidebar;
+    if (isLeader.value) return LeaderSidebar;
+    return UserSidebar;
+});
 
 const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;

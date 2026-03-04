@@ -54,6 +54,37 @@ class HandleInertiaRequests extends Middleware
                 'warning' => $request->session()->get('warning'),
                 'info' => $request->session()->get('info'),
             ],
+            'notifications' => $request->user() && $request->user()->hasAnyRole(['manager', 'supervisor']) ? [
+                'unapproved_tasks' => \App\Models\Tugas::with('user')
+                    ->where('status_persetujuan', 'menunggu')
+                    // Show tasks waiting for final approval (progress 100 or marked selesai)
+                    ->whereIn('status', ['selesai', 'WAITING APPROVAL']) 
+                    ->whereHas('sesiTugas', function($q) use ($request) {
+                        $q->where('divisi_id', $request->user()->divisi_id);
+                    })
+                    ->latest()
+                    ->take(5)
+                    ->get(),
+                'pending_plans' => \App\Models\Tugas::with(['user', 'subTugas'])
+                    ->whereHas('subTugas', function($q) {
+                        $q->where('status_usulan', 'pending');
+                    })
+                    ->whereHas('sesiTugas', function($q) use ($request) {
+                        $q->where('divisi_id', $request->user()->divisi_id);
+                    })
+                    ->latest()
+                    ->take(5)
+                    ->get(),
+                'total_pending' => \App\Models\Tugas::where('status_persetujuan', 'menunggu')
+                    ->whereHas('sesiTugas', function($q) use ($request) {
+                        $q->where('divisi_id', $request->user()->divisi_id);
+                    })->count() + \App\Models\Tugas::whereHas('subTugas', function($q) {
+                        $q->where('status_usulan', 'pending');
+                    })->whereHas('sesiTugas', function($q) use ($request) {
+                        $q->where('divisi_id', $request->user()->divisi_id);
+                    })->count(),
+            ] : null,
+            'global_divisions' => \App\Models\Divisi::all(),
         ];
     }
 }

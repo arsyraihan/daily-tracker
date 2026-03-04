@@ -27,13 +27,23 @@ class IsSupervisor
             return $next($request);
         }
 
+        // Leader bypass for specific coordination routes
+        $leaderRoutes = [
+            'manager.tugas.propose-sub',
+            'manager.tugas.sub.complete',
+            'manager.tugas.detail'
+        ];
+
+        if ($user->hasAnyRole(['leader', 'employee']) && $request->routeIs($leaderRoutes)) {
+            return $next($request);
+        }
+
         // Basic Role Check: Must be management staff
         if (!$user->hasAnyRole(['supervisor', 'manager'])) {
             abort(403, 'Unauthorized: Management Access Only.');
         }
 
         // 1. GATE UTAMA: Izin Akses Manager Portal
-        // Jika tidak punya 'view-dashboard', user dianggap tidak berhak masuk ke area management sama sekali.
         if (!$user->can('view-dashboard')) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
@@ -41,10 +51,16 @@ class IsSupervisor
             return redirect()->route('login')->with('error', 'Izin akses Portal Management Anda telah dicabut.');
         }
 
-        // 2. PROTEKSI FITUR SPESIFIK: Misalnya Absensi
+        // 2. PROTEKSI FITUR SPESIFIK
         if ($request->routeIs('manager.absensi.*')) {
             if (!$user->can('kontrol absensi')) {
                 abort(403, 'Anda tidak memiliki hak akses (kontrol absensi) untuk fitur ini.');
+            }
+        }
+
+        if ($request->routeIs('manager.tugas.*')) {
+            if (!$user->can('kelola tugas')) {
+                abort(403, 'Anda tidak memiliki hak akses (kelola tugas) untuk fitur ini.');
             }
         }
 
