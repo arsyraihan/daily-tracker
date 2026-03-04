@@ -42,6 +42,16 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Superadmin\Jabatan\JabatanRepositoryInterface::class,
             \App\Repositories\Superadmin\Jabatan\JabatanRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Manager\Absensi\SesiAbsensiRepositoryInterface::class,
+            \App\Repositories\Manager\Absensi\SesiAbsensiRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Employee\Absensi\AbsensiRepositoryInterface::class,
+            \App\Repositories\Employee\Absensi\AbsensiRepository::class
+        );
     }
 
     /**

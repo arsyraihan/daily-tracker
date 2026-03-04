@@ -44,10 +44,25 @@ class RolesAndPermissionsSeeder extends Seeder
             $admin->syncRoles(['superadmin']);
         }
 
+        $manager = User::where('email', 'manager@gmail.com')->first();
+        if ($manager) {
+            $manager->syncRoles(['manager']);
+            // Assign to IT division and manager position
+            $manager->update([
+                'divisi_id' => 1,
+                'jabatan_id' => 2,
+                'kode_karyawan' => 'MGR001'
+            ]);
+        }
+
         $user = User::where('email', 'chilmi@gmail.com')->first();
         if ($user) {
-            $user->update(['name' => 'Chilmi']);
             $user->syncRoles(['employee']);
+            $user->update([
+                'divisi_id' => 1,
+                'jabatan_id' => 6,
+                'kode_karyawan' => 'EMP001'
+            ]);
         }
     }
 }

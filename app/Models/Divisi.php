@@ -8,4 +8,9 @@ class Divisi extends Model
 {
     protected $table = 'divisi';
     protected $fillable = ['nama', 'deskripsi'];
+
+    public function sesiAbsensi()
+    {
+        return $this->hasMany(SesiAbsensi::class);
+    }
 }

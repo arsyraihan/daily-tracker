@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
 import UserSidebar from '@/Components/UserSidebar.vue';
+import SupervisorSidebar from '@/Components/SupervisorSidebar.vue';
 import Navbar from '@/Components/Navbar.vue';
 import PremiumToast from '@/Components/PremiumToast.vue';
 
@@ -9,7 +10,15 @@ defineProps({
     title: String,
 });
 
+const page = usePage();
+const user = page.props.auth.user;
 const isCollapsed = ref(false);
+
+const isManager = computed(() => {
+    return user?.roles?.some(role => role === 'manager' || role === 'supervisor');
+});
+
+const SidebarComponent = computed(() => isManager.value ? SupervisorSidebar : UserSidebar);
 
 const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;
@@ -24,7 +33,7 @@ const toggleSidebar = () => {
         <PremiumToast />
 
         <!-- Sidebar -->
-        <UserSidebar :isCollapsed="isCollapsed" @toggleCollapse="toggleSidebar" />
+        <component :is="SidebarComponent" :isCollapsed="isCollapsed" @toggleCollapse="toggleSidebar" />
 
         <!-- Main Content -->
         <div 

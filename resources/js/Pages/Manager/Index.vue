@@ -134,7 +134,7 @@ function getIcon(iconName) {
                 <div class="bg-emerald-50 dark:bg-emerald-900/10 rounded-[3rem] p-8 border border-emerald-100 dark:border-emerald-900/30">
                     <h3 class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.3em] mb-4">Upcoming Responsibilities</h3>
                     <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed italic uppercase tracking-wider">
-                        Step 4 (Attendance Sessions) will populate here once active. You will be able to manage daily check-ins for your team.
+                        Step 4 (Management Absensi) will populate here once active. You will be able to manage daily check-ins for your team.
                      </p>
                 </div>
             </div>
