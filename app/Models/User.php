@@ -83,4 +83,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'atasan_id');
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class);
+    }
 }

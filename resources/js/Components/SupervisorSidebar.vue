@@ -19,9 +19,9 @@ defineProps({
 defineEmits(['toggleCollapse']);
 
 const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, route: 'dashboard', active: 'dashboard' },
-    { name: 'Team Overview', icon: Users, route: 'manager.dashboard', active: 'manager.dashboard' },
-    { name: 'My Activity', icon: Clock, route: 'employee.dashboard', active: 'employee.dashboard' },
+    { name: 'Dashboard', icon: LayoutDashboard, route: 'manager.dashboard', active: 'manager.dashboard' },
+    { name: 'Management Absensi', icon: Calendar, route: 'manager.absensi.index', active: 'manager.absensi.*' },
+    { name: 'Absensi Saya', icon: Clock, route: 'employee.absensi.index', active: 'employee.absensi.index' },
     { name: 'Profile', icon: User, route: 'profile.show', active: 'profile.show' },
 ];
 </script>

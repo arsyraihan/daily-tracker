@@ -20,8 +20,8 @@ defineProps({
 const emit = defineEmits(['toggleCollapse']);
 
 const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, route: 'dashboard', active: 'dashboard' },
-    { name: 'My Activity', icon: Clock, route: 'employee.dashboard', active: 'employee.dashboard' },
+    { name: 'Dashboard', icon: LayoutDashboard, route: 'employee.dashboard', active: 'employee.dashboard' },
+    { name: 'Absensi Saya', icon: Clock, route: 'employee.absensi.index', active: 'employee.absensi.index' },
     { name: 'Profile', icon: User, route: 'profile.show', active: 'profile.show' },
 ];
 </script>

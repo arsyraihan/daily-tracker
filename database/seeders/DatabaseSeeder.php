@@ -28,14 +28,22 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'chilmi@gmail.com'],
             [
-                'name' => 'Regular User',
-                'password' => Hash::make('chilmi123'),
+                'name' => 'Chilmi',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'manager@gmail.com'],
+            [
+                'name' => 'Test Manager',
+                'password' => Hash::make('password'),
             ]
         );
 
         $this->call([
-            RolesAndPermissionsSeeder::class,
             OrganizationSeeder::class,
+            RolesAndPermissionsSeeder::class,
         ]);
     }
 }

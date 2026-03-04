@@ -28,9 +28,9 @@ const menuItems = [
     },
     {
         title: "Overview",
-        route: "dashboard",
+        route: "super-admin.dashboard",
         icon: LayoutDashboard,
-        active: "dashboard",
+        active: "super-admin.dashboard",
     },
     {
         title: "MANAGER HUB",

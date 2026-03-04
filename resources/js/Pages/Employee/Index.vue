@@ -34,7 +34,7 @@ function getIcon(iconName) {
                     <span class="text-indigo-600 dark:text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em]">Employee Workspace</span>
                 </div>
                 <h2 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-none uppercase">
-                    Your <span class="text-indigo-600 dark:text-indigo-400">Activity Hub</span>
+                    Karyawan <span class="text-indigo-600 dark:text-indigo-400">Dashboard</span>
                 </h2>
                 <p class="text-slate-500 dark:text-slate-400 font-bold text-sm italic">Manage your attendance and daily tasks center.</p>
             </div>
