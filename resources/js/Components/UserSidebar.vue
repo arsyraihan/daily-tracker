@@ -23,6 +23,7 @@ const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, route: 'employee.dashboard', active: 'employee.dashboard' },
     { name: 'Tugas Saya', icon: CheckSquare, route: 'employee.tugas.index', active: 'employee.tugas.*' },
     { name: 'Absensi Saya', icon: Clock, route: 'employee.absensi.index', active: 'employee.absensi.index' },
+    { name: 'Laporan Saya', icon: ClipboardList, route: 'employee.reports.index', active: 'employee.reports.*' },
     { name: 'Profile', icon: User, route: 'profile.show', active: 'profile.show' },
 ];
 </script>

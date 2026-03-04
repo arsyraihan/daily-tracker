@@ -12,7 +12,8 @@ import {
     Users,
     Clock,
     Settings,
-    Shield
+    Shield,
+    FileText
 } from 'lucide-vue-next';
 
 defineProps({
@@ -51,10 +52,22 @@ const menuItems = [
         active: 'employee.absensi.index' 
     },
     { 
+        name: 'Laporan Saya', 
+        icon: ClipboardList, 
+        route: 'employee.reports.index', 
+        active: 'employee.reports.*' 
+    },
+    { 
         name: 'Profile', 
         icon: User, 
         route: 'profile.show', 
         active: 'profile.show' 
+    },
+    { 
+        name: 'Activity Reports', 
+        icon: FileText, 
+        route: 'manager.reports.index', 
+        active: 'manager.reports.*' 
     },
 ];
 

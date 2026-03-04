@@ -42,7 +42,7 @@ function getIcon(iconName) {
 
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div v-for="stat in stats" :key="stat.label" class="bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+            <div v-for="stat in stats" :key="stat.label" class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all group">
                 <div class="flex items-center gap-4">
                     <div :class="['w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-indigo-500/10', stat.bg]">
                         <component :is="getIcon(stat.icon)" :class="['w-6 h-6', stat.color]" />
@@ -57,7 +57,7 @@ function getIcon(iconName) {
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Left Side: Activity / Profile Details -->
-            <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div class="flex items-center justify-between mb-10 px-2">
                     <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight leading-none">Profile Metadata</h3>
                     <div class="text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100 dark:bg-indigo-900/40 dark:border-indigo-800 dark:text-indigo-400">Employee Secured</div>
@@ -97,7 +97,7 @@ function getIcon(iconName) {
                     </div>
 
                     <!-- Right Column Detail -->
-                    <div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-[2rem] border border-dashed border-slate-200 dark:border-slate-700 flex flex-col justify-center text-center">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 flex flex-col justify-center text-center">
                         <div class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 italic">Security Credentials</div>
                         <div class="space-y-4">
                             <div class="flex flex-col items-center">
@@ -115,12 +115,12 @@ function getIcon(iconName) {
 
             <!-- Right Side: Personal Identity Card -->
             <div class="lg:col-span-4 space-y-8">
-                <div class="bg-indigo-900 rounded-[3rem] p-8 relative overflow-hidden text-center shadow-2xl shadow-indigo-500/30">
+                <div class="bg-indigo-900 rounded-3xl p-8 relative overflow-hidden text-center shadow-xl shadow-indigo-500/20">
                      <div class="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                      <div class="absolute -bottom-12 -left-12 w-24 h-24 bg-indigo-500/20 rounded-full blur-2xl"></div>
                      
                      <div class="relative z-10 flex flex-col items-center">
-                          <div class="w-24 h-24 rounded-[2rem] bg-indigo-600 p-1 mb-6 rotate-3 shadow-xl">
+                          <div class="w-24 h-24 rounded-2xl bg-indigo-600 p-1 mb-6 rotate-3 shadow-xl">
                                <div class="w-full h-full rounded-[1.8rem] bg-slate-800 flex items-center justify-center font-black text-3xl text-indigo-400 italic">
                                     {{ user.name.charAt(0) }}
                                </div>
@@ -145,7 +145,7 @@ function getIcon(iconName) {
                      </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 rounded-[3rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.3em] mb-4">Quick Statistics</h3>
                     <div class="space-y-4">
                         <div class="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-widest group">

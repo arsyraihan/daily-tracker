@@ -193,7 +193,7 @@ const getStatusBadge = (task) => {
             </div>
 
             <!-- Task Board (Modern List/Table Style) -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -288,7 +288,7 @@ const getStatusBadge = (task) => {
         <!-- Update Progress Modal -->
         <DialogModal :show="isModalOpen" @close="isModalOpen = false" maxWidth="lg">
             <template #title>
-                <div class="p-2 border-b border-slate-100 dark:border-slate-800 -mx-6 -mt-6 rounded-t-3xl mb-6 bg-slate-50/50 dark:bg-slate-800/30 px-6 py-5">
+                <div class="p-2 border-b border-slate-100 dark:border-slate-800 -mx-6 -mt-6 rounded-t-2xl mb-6 bg-slate-50/50 dark:bg-slate-800/30 px-6 py-5">
                      <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Report <span class="text-indigo-600">Work Progres</span></h3>
                      <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Submit current status to your manager.</p>
                 </div>
@@ -421,7 +421,7 @@ const getStatusBadge = (task) => {
         <!-- Propose Breakdown Modal -->
         <DialogModal :show="isBreakdownModalOpen" @close="isBreakdownModalOpen = false" maxWidth="lg">
             <template #title>
-                <div class="p-2 border-b border-slate-100 dark:border-slate-800 -mx-6 -mt-6 rounded-t-3xl mb-6 bg-indigo-600 px-6 py-6 text-white shadow-xl">
+                <div class="p-2 border-b border-slate-100 dark:border-slate-800 -mx-6 -mt-6 rounded-t-2xl mb-6 bg-indigo-600 px-6 py-6 text-white shadow-xl">
                      <h3 class="text-xl font-black uppercase tracking-tight">Structured <span class="text-indigo-200">Task Breakdown</span></h3>
                      <p class="text-indigo-100 text-[10px] font-black uppercase tracking-widest mt-1 opacity-80">Define specific milestones & point weights.</p>
                 </div>
@@ -438,7 +438,7 @@ const getStatusBadge = (task) => {
 
                     <div class="space-y-4">
                         <div v-for="(item, index) in breakdownForm.sub_tugas" :key="index" 
-                             class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800 animate-in slide-in-from-bottom-2 duration-300">
+                             class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 animate-in slide-in-from-bottom-2 duration-300">
                             <div class="flex items-center justify-between mb-4">
                                 <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Milestone #{{ index + 1 }}</span>
                                 <button v-if="breakdownForm.sub_tugas.length > 1" @click="removeMilestone(index)" class="text-rose-500 p-1 hover:bg-rose-50 rounded-lg transition-colors">
@@ -465,12 +465,12 @@ const getStatusBadge = (task) => {
                         </div>
                     </div>
 
-                    <button @click="addMilestone" class="w-full py-4 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[28px] text-slate-400 hover:text-indigo-600 hover:border-indigo-200 transition-all flex items-center justify-center gap-2 group">
+                    <button @click="addMilestone" class="w-full py-4 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-2xl text-slate-400 hover:text-indigo-600 hover:border-indigo-200 transition-all flex items-center justify-center gap-2 group">
                         <Plus class="w-5 h-5 group-hover:rotate-90 transition-transform" />
                         <span class="text-[10px] font-black uppercase tracking-widest">Add Strategic Milestone</span>
                     </button>
 
-                    <div class="p-6 bg-slate-900 dark:bg-black rounded-[32px] flex items-center justify-between">
+                    <div class="p-6 bg-slate-900 dark:bg-black rounded-3xl flex items-center justify-between">
                         <div>
                             <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cumulative Allocation</p>
                             <p :class="['text-2xl font-black leading-none', totalWeight === 100 ? 'text-emerald-500' : 'text-rose-500']">{{ totalWeight }} / 100%</p>
@@ -499,7 +499,7 @@ const getStatusBadge = (task) => {
         </DialogModal>
         <!-- Success Celebration Overlay -->
         <div v-if="showSuccessAlert" class="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none p-4">
-            <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-indigo-100 dark:border-indigo-900/30 p-8 rounded-[40px] shadow-2xl flex flex-col items-center animate-in zoom-in fade-in duration-500 max-w-sm text-center">
+            <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-indigo-100 dark:border-indigo-900/30 p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-in zoom-in fade-in duration-500 max-w-sm text-center">
                 <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6 shadow-xl shadow-emerald-500/30 animate-bounce">
                     <CheckCircle2 class="w-10 h-10 text-white" />
                 </div>

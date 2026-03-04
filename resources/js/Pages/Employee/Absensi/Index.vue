@@ -157,7 +157,7 @@ onUnmounted(() => {
                 
                 <!-- Main Tracking Center -->
                 <div class="lg:col-span-8 space-y-6">
-                    <div class="bg-slate-900 rounded-[3rem] p-8 shadow-2xl relative overflow-hidden min-h-[300px]">
+                    <div class="bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden min-h-[300px]">
                          <!-- Background Visuals -->
                         <div class="absolute inset-0 opacity-20 pointer-events-none">
                             <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500 rounded-full blur-[100px] -mr-32 -mt-32"></div>
@@ -305,7 +305,7 @@ onUnmounted(() => {
                                         <div v-if="entry.catatan" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 transition-all cursor-help group/note relative border border-transparent hover:border-indigo-100 ml-2">
                                             <MessageSquare class="w-4 h-4" />
                                             <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-6 bg-slate-900 text-white rounded-[2rem] shadow-2xl opacity-0 group-hover/note:opacity-100 transition-all pointer-events-none z-50 transform translate-y-2 group-hover/note:translate-y-0 text-left scale-95 group-hover/note:scale-100">
+                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-6 bg-slate-900 text-white rounded-2xl shadow-2xl opacity-0 group-hover/note:opacity-100 transition-all pointer-events-none z-50 transform translate-y-2 group-hover/note:translate-y-0 text-left scale-95 group-hover/note:scale-100">
                                                 <div class="flex items-center gap-2 mb-3">
                                                     <UserCircle class="w-4 h-4 text-indigo-400" />
                                                     <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.2em]">Personnel Log</p>
