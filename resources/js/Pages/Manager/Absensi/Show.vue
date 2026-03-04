@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import SupervisorLayout from '@/Layouts/SupervisorLayout.vue';
+import ManagerLayout from "@/Layouts/ManagerLayout.vue";
 import { 
     ChevronLeft, CheckCircle2, XCircle, 
     Clock, User, MessageSquare, ShieldCheck, HelpCircle,
@@ -143,7 +143,7 @@ const openAddModal = () => {
 </script>
 
 <template>
-    <SupervisorLayout title="Session Details">
+    <ManagerLayout :title="`Session: ${session.nama}`">
         <template #header>
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-6">
@@ -431,5 +431,5 @@ const openAddModal = () => {
                 </div>
             </template>
         </DialogModal>
-    </SupervisorLayout>
+    </ManagerLayout>
 </template>

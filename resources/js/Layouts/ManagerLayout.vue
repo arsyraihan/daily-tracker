@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import SupervisorSidebar from '@/Components/SupervisorSidebar.vue';
+import ManagerSidebar from '@/Components/ManagerSidebar.vue';
 import Navbar from '@/Components/Navbar.vue';
 import PremiumToast from '@/Components/PremiumToast.vue';
 
@@ -24,7 +24,7 @@ const toggleSidebar = () => {
         <PremiumToast />
 
         <!-- Sidebar -->
-        <SupervisorSidebar :isCollapsed="isCollapsed" @toggleCollapse="toggleSidebar" />
+        <ManagerSidebar :isCollapsed="isCollapsed" @toggleCollapse="toggleSidebar" />
 
         <!-- Main Content -->
         <div 
@@ -45,14 +45,15 @@ const toggleSidebar = () => {
                 <slot />
             </main>
 
-            <footer class="p-6 text-center text-slate-400 text-sm">
-                &copy; {{ new Date().getFullYear() }} DailyTracker. Supervisor Dashboard.
+            <footer class="p-6 text-center text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] opacity-40">
+                &copy; {{ new Date().getFullYear() }} DailyTracker. Management Unified System.
             </footer>
         </div>
     </div>
 </template>
 
 <style>
+/* Smooth transitions */
 * {
     transition-property: background-color, border-color, color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,5 +62,20 @@ const toggleSidebar = () => {
 
 .dark * {
     transition-duration: 300ms;
+}
+
+/* Custom Scrollbar for the whole app if needed */
+body::-webkit-scrollbar {
+    width: 6px;
+}
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.dark body::-webkit-scrollbar-thumb {
+    background: #334155;
 }
 </style>

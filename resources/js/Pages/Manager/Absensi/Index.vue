@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import SupervisorLayout from '@/Layouts/SupervisorLayout.vue';
+import ManagerLayout from '@/Layouts/ManagerLayout.vue';
 import { 
     Plus, Calendar, Eye, Trash2, 
     Lock, Unlock, Clock, CheckCircle2,
@@ -125,7 +125,7 @@ const submitBulk = () => {
 </script>
 
 <template>
-    <SupervisorLayout title="Attendance Management">
+    <ManagerLayout title="Attendance Sessions">
         <template #header>
             <div class="flex items-center justify-between mb-10">
                 <div>
@@ -170,7 +170,7 @@ const submitBulk = () => {
                 <p class="text-slate-400 font-bold text-xs uppercase tracking-widest italic">Open your first attendance session to start tracking logs.</p>
             </div>
 
-            <div v-else class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div v-else class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex-1">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -481,5 +481,5 @@ const submitBulk = () => {
                 </div>
             </template>
         </DialogModal>
-    </SupervisorLayout>
+    </ManagerLayout>
 </template>
